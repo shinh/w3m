@@ -104,7 +104,7 @@ inputLineHistSearch(char *prompt, char *def_str, int flag, Hist *hist,
 	use_hist = FALSE;
     }
     if (flag & IN_URL) {
-	cm_mode = CPL_ALWAYS | CPL_URL;
+        cm_mode = CPL_ON | CPL_URL;
     }
     else if (flag & IN_FILENAME) {
 	cm_mode = CPL_ALWAYS;
