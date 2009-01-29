@@ -93,28 +93,14 @@ conv_search_string(char *str, wc_ces f_ces)
 }
 #endif
 
-int
-forwardSearch(Buffer *buf, char *str)
+static int
+forwardSearchWithRegex(Buffer *buf)
 {
-    char *p, *first, *last;
+    char *first, *last;
     Line *l, *begin;
     int wrapped = FALSE;
     int pos;
 
-#ifdef USE_MIGEMO
-    if (migemo_active > 0) {
-	if (((p = regexCompile(migemostr(str), IgnoreCase)) != NULL)
-	    && ((p = regexCompile(str, IgnoreCase)) != NULL)) {
-	    message(p, 0, 0);
-	    return SR_NOTFOUND;
-	}
-    }
-    else
-#endif
-    if ((p = regexCompile(str, IgnoreCase)) != NULL) {
-	message(p, 0, 0);
-	return SR_NOTFOUND;
-    }
     l = buf->currentLine;
     if (l == NULL) {
 	return SR_NOTFOUND;
@@ -188,14 +174,20 @@ forwardSearch(Buffer *buf, char *str)
     return SR_NOTFOUND;
 }
 
-int
-backwardSearch(Buffer *buf, char *str)
+int forwardSearchNoMigemo(Buffer *buf, char *str)
 {
-    char *p, *q, *found, *found_last, *first, *last;
-    Line *l, *begin;
-    int wrapped = FALSE;
-    int pos;
+    char* p;
+    if ((p = regexCompile(str, IgnoreCase)) != NULL) {
+	message(p, 0, 0);
+	return SR_NOTFOUND;
+    }
+    return forwardSearchWithRegex(buf);
+}
 
+int
+forwardSearch(Buffer *buf, char *str)
+{
+    char* p;
 #ifdef USE_MIGEMO
     if (migemo_active > 0) {
 	if (((p = regexCompile(migemostr(str), IgnoreCase)) != NULL)
@@ -203,13 +195,20 @@ backwardSearch(Buffer *buf, char *str)
 	    message(p, 0, 0);
 	    return SR_NOTFOUND;
 	}
+	return forwardSearchWithRegex(buf);
     }
-    else
 #endif
-    if ((p = regexCompile(str, IgnoreCase)) != NULL) {
-	message(p, 0, 0);
-	return SR_NOTFOUND;
-    }
+    return forwardSearchNoMigemo(buf, str);
+}
+
+static int
+backwardSearchWithRegex(Buffer *buf)
+{
+    char *p, *q, *found, *found_last, *first, *last;
+    Line *l, *begin;
+    int wrapped = FALSE;
+    int pos;
+
     l = buf->currentLine;
     if (l == NULL) {
 	return SR_NOTFOUND;
@@ -304,4 +303,34 @@ backwardSearch(Buffer *buf, char *str)
 	    break;
     }
     return SR_NOTFOUND;
+}
+
+int
+backwardSearchNoMigemo(Buffer *buf, char *str)
+{
+    char *p;
+
+    if ((p = regexCompile(str, IgnoreCase)) != NULL) {
+	message(p, 0, 0);
+	return SR_NOTFOUND;
+    }
+    return backwardSearchWithRegex(buf);
+}
+
+int
+backwardSearch(Buffer *buf, char *str)
+{
+    char *p;
+
+#ifdef USE_MIGEMO
+    if (migemo_active > 0) {
+	if (((p = regexCompile(migemostr(str), IgnoreCase)) != NULL)
+	    && ((p = regexCompile(str, IgnoreCase)) != NULL)) {
+	    message(p, 0, 0);
+	    return SR_NOTFOUND;
+	}
+	return backwardSearchWithRegex(buf);
+    }
+#endif
+    return backwardSearchNoMigemo(buf, str);
 }

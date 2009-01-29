@@ -18,8 +18,10 @@ extern void ctrCsrH(void);
 extern void rdrwSc(void);
 extern void srchfor(void);
 extern void isrchfor(void);
+extern void isrchfor_nomigemo(void);
 extern void srchbak(void);
 extern void isrchbak(void);
+extern void isrchbak_nomigemo(void);
 extern void srchnxt(void);
 extern void srchprv(void);
 extern void shiftl(void);
@@ -342,7 +344,9 @@ extern char *conv_search_string(char *str, wc_ces f_ces);
 #define conv_search_string(str, f_ces)	str
 #endif
 extern int forwardSearch(Buffer *buf, char *str);
+extern int forwardSearchNoMigemo(Buffer *buf, char *str);
 extern int backwardSearch(Buffer *buf, char *str);
+extern int backwardSearchNoMigemo(Buffer *buf, char *str);
 extern void pcmap(void);
 extern void escmap(void);
 extern void escbmap(void);

@@ -1806,6 +1806,12 @@ DEFUN(isrchfor, ISEARCH, "Incremental search forward")
     isrch(forwardSearch, "I-search: ");
 }
 
+DEFUN(isrchfor_nomigemo, ISEARCH_NOMIGEMO,
+      "Incremental search forward w/o migemo")
+{
+    isrch(forwardSearchNoMigemo, "I-search: ");
+}
+
 /* Search regular expression backward */
 
 DEFUN(srchbak, SEARCH_BACK, "Search backward")
@@ -1817,6 +1823,13 @@ DEFUN(isrchbak, ISEARCH_BACK, "Incremental search backward")
 {
     isrch(backwardSearch, "I-search backward: ");
 }
+
+DEFUN(isrchbak_nomigemo, ISEARCH_BACK_NOMIGEMO,
+      "Incremental search backward w/o migemo")
+{
+    isrch(backwardSearchNoMigemo, "I-search backward: ");
+}
+
 
 static void
 srch_nxtprv(int reverse)
