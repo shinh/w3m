@@ -5184,6 +5184,16 @@ HTMLtagproc1(struct parsed_tag *tag, struct html_feed_environ *h_env)
 	    }
 	}
 	return 1;
+    case HTML_IFRAME:
+	if (view_unseenobject) {
+	    if (parsedtag_get_value(tag, ATTR_SRC, &p)) {
+		Str s;
+		q = html_quote(p);
+		s = Sprintf("<A HREF=\"%s\">iframe(%s)</A>", q, q);
+		HTMLlineproc1(s->ptr, h_env);
+	    }
+	}
+	return 1;
     case HTML_BODY:
 	if (view_unseenobject) {
 	    if (parsedtag_get_value(tag, ATTR_BACKGROUND, &p)) {

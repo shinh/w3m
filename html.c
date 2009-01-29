@@ -89,6 +89,9 @@ unsigned char ALST_APPLET[] = { ATTR_ARCHIVE, ATTR_CORE };
 unsigned char ALST_EMBED[] = { ATTR_SRC, ATTR_CORE };
 #define MAX_EMBED	MAXA_CORE + 1
 
+unsigned char ALST_IFRAME[] = { ATTR_SRC, ATTR_CORE };
+#define MAXA_IFRAME	MAXA_CORE + 1
+
 unsigned char ALST_TEXTAREA_INT[] = { ATTR_TEXTAREANUMBER };
 #define MAXA_TEXTAREA_INT 1
 unsigned char ALST_SELECT_INT[] = { ATTR_SELECTNUMBER };
@@ -235,8 +238,8 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"/i", NULL, 0, TFLG_END},	/*  110 HTML_N_I */
     {"strong", NULL, 0, 0},		/* 111 HTML_STRONG */
     {"/strong", NULL, 0, TFLG_END},	/* 112 HTML_N_STRONG */
-    {NULL, NULL, 0, 0},		/* 113 Undefined       */
-    {NULL, NULL, 0, 0},		/* 114 Undefined       */
+    {"iframe", ALST_IFRAME, MAXA_IFRAME, 0},     /*  113 HTML_IFRAME */
+    {"/iframe", NULL, 0, TFLG_END}, /* 114 HTML_N_IFRAME */
     {NULL, NULL, 0, 0},		/* 115 Undefined       */
     {NULL, NULL, 0, 0},		/* 116 Undefined       */
     {NULL, NULL, 0, 0},		/* 117 Undefined       */

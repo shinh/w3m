@@ -161,6 +161,8 @@ pre_int		HTML_PRE_INT
 bgsound		HTML_BGSOUND
 applet		HTML_APPLET
 embed		HTML_EMBED
+iframe          HTML_IFRAME
+/iframe         HTML_N_IFRAME
 internal	HTML_INTERNAL
 /internal	HTML_N_INTERNAL
 select_int	HTML_SELECT_INT
