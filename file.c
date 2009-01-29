@@ -262,6 +262,7 @@ is_text_type(char *type)
 {
     return (type == NULL || type[0] == '\0' ||
 	    strncasecmp(type, "text/", 5) == 0 ||
+	    strcasecmp(type, "application/xhtml+xml") == 0 ||
 	    strncasecmp(type, "message/", sizeof("message/") - 1) == 0);
 }
 
@@ -2165,7 +2166,8 @@ loadGeneralFile(char *path, ParsedURL *volatile current, char *referer,
     }
 #endif
 
-    if (!strcasecmp(t, "text/html"))
+    if (!strcasecmp(t, "text/html") ||
+	!strcasecmp(t, "application/xhtml+xml"))
 	proc = loadHTMLBuffer;
     else if (is_plain_text_type(t))
 	proc = loadBuffer;
@@ -2229,7 +2231,8 @@ loadGeneralFile(char *path, ParsedURL *volatile current, char *referer,
 	b->real_type = real_type;
 	if (b->currentURL.host == NULL && b->currentURL.file == NULL)
 	    copyParsedURL(&b->currentURL, &pu);
-	if (!strcasecmp(t, "text/html"))
+	if (!strcasecmp(t, "text/html") ||
+	    !strcasecmp(t, "application/xhtml+xml"))
 	    b->type = "text/html";
 	else if (w3m_backend) {
 	    Str s = Strnew_charp(t);
