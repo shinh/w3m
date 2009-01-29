@@ -3019,35 +3019,6 @@ bufferA(void)
     on_target = TRUE;
 }
 
-/* view inline image */
-DEFUN(followI, VIEW_IMAGE, "View image")
-{
-    Line *l;
-    Anchor *a;
-    Buffer *buf;
-
-    if (Currentbuf->firstLine == NULL)
-	return;
-    l = Currentbuf->currentLine;
-
-    a = retrieveCurrentImg(Currentbuf);
-    if (a == NULL)
-	return;
-    /* FIXME: gettextize? */
-    message(Sprintf("loading %s", a->url)->ptr, 0, 0);
-    refresh();
-    buf = loadGeneralFile(a->url, baseURL(Currentbuf), NULL, 0, NULL);
-    if (buf == NULL) {
-	/* FIXME: gettextize? */
-	char *emsg = Sprintf("Can't load %s", a->url)->ptr;
-	disp_err_message(emsg, FALSE);
-    }
-    else if (buf != NO_BUFFER) {
-	pushBuffer(buf);
-    }
-    displayBuffer(Currentbuf, B_NORMAL);
-}
-
 static FormItemList *
 save_submit_formlist(FormItemList *src)
 {
@@ -5059,6 +5030,45 @@ DEFUN(linkbrz, EXTERN_LINK, "View current link using external browser")
 	return;
     parseURL2(a->url, &pu, baseURL(Currentbuf));
     invoke_browser(parsedURL2Str(&pu)->ptr);
+}
+
+/* view inline image */
+DEFUN(followI, VIEW_IMAGE, "View image")
+{
+    Line *l;
+    Anchor *a;
+    Buffer *buf;
+    char *browser;
+
+    if (Currentbuf->firstLine == NULL)
+	return;
+    l = Currentbuf->currentLine;
+
+    a = retrieveCurrentImg(Currentbuf);
+    if (a == NULL)
+	return;
+
+    browser = searchKeyData();
+    if (browser != NULL && *browser != '\0') {
+	ParsedURL pu;
+	parseURL2(a->url, &pu, baseURL(Currentbuf));
+	invoke_browser(parsedURL2Str(&pu)->ptr);
+	return;
+    }
+
+    /* FIXME: gettextize? */
+    message(Sprintf("loading %s", a->url)->ptr, 0, 0);
+    refresh();
+    buf = loadGeneralFile(a->url, baseURL(Currentbuf), NULL, 0, NULL);
+    if (buf == NULL) {
+	/* FIXME: gettextize? */
+	char *emsg = Sprintf("Can't load %s", a->url)->ptr;
+	disp_err_message(emsg, FALSE);
+    }
+    else if (buf != NO_BUFFER) {
+	pushBuffer(buf);
+    }
+    displayBuffer(Currentbuf, B_NORMAL);
 }
 
 /* show current line number and number of lines in the entire document */
