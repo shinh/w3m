@@ -159,7 +159,8 @@ parse_tag(char **s, int internal)
     /* Parse tag arguments */
     SKIP_BLANKS(q);
     while (1) {
-       Str value = NULL, value_tmp = NULL;
+	Str value = NULL, value_tmp = NULL;
+	if (*q == '/' && tag_id == HTML_SCRIPT) return NULL;
 	if (*q == '>' || *q == '\0')
 	    goto done_parse_tag;
 	p = attrname;
