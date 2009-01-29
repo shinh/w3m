@@ -1559,7 +1559,6 @@ getAuthCookie(struct http_auth *hauth, char *auth_header,
 	if (QuietMessage)
 	    return;
 	/* input username and password */
-	sleep(2);
 	if (fmInitialized) {
 	    char *pp;
 	    term_raw();
