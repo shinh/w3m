@@ -2970,8 +2970,6 @@ DEFUN(followA, GOTO_LINK, "Go to current link")
 	    disp_err_message("no mailer is specified", TRUE);
 	    return;
 	}
-	if ((pos = strchr(to->ptr, '?')) != NULL)
-	    Strtruncate(to, pos - to->ptr);
 #endif
 	fmTerm();
 	system(myExtCommand(Mailer, shell_quote(file_unquote(to->ptr)),
