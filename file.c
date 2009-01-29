@@ -1768,10 +1768,8 @@ loadGeneralFile(char *path, ParsedURL *volatile current, char *referer,
 #ifdef USE_EXTERNAL_URI_LOADER
 	    tmp = searchURIMethods(&pu);
 	    if (tmp != NULL) {
-		b = loadGeneralFile(tmp->ptr, current, referer, flag, request);
-		if (b != NULL && b != NO_BUFFER)
-		    copyParsedURL(&b->currentURL, &pu);
-		return b;
+		tpath = path = tmp->ptr;
+		goto load_doc;
 	    }
 #endif
 	    /* FIXME: gettextize? */
