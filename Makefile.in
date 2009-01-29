@@ -202,6 +202,9 @@ w3mimg/w3mimg.a: w3mimg
 w3mimg:
 	(cd w3mimg && $(MAKE) CC="$(CC0)" OPTS="$(OPTS)")
 
+w3mcooksrv: $(OBJS) w3mcooksrv.c
+	$(CC) -DCOOKIE_SERVER -o w3mcooksrv w3mcooksrv.c cookie.c Str.o regex.o entity.o libwc/*.o $(CFLAGS) $(LDFLAGS) $(LIBS) $(EXT_LIBS) $(W3M_LIBS)
+
 po:
 	(cd $@ && $(MAKE))
 
