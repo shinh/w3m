@@ -53,6 +53,11 @@ searchMailcap(struct mailcap *table, char *type)
     struct mailcap *mcap = NULL;
     int i;
 
+    if (!strcmp(type, "application/x-tar") ||
+	!strcmp(type, "application/x-gtar")) {
+	return NULL;
+    }
+
     if (table == NULL)
 	return NULL;
     for (; table->type; table++) {
