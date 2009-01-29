@@ -1226,7 +1226,7 @@ disp_err_message(char *s, int redraw_current)
 }
 
 void
-disp_message_nsec(char *s, int redraw_current, int sec, int purge, int mouse)
+disp_message_nsec(char *s, int redraw_current, float sec, int purge, int mouse)
 {
     if (QuietMessage)
 	return;

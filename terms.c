@@ -1983,7 +1983,7 @@ skip_escseq(void)
 }
 
 int
-sleep_till_anykey(int sec, int purge)
+sleep_till_anykey(float sec, int purge)
 {
     fd_set rfd;
     struct timeval tim;
@@ -1994,7 +1994,7 @@ sleep_till_anykey(int sec, int purge)
     term_raw();
 
     tim.tv_sec = sec;
-    tim.tv_usec = 0;
+    tim.tv_usec = (sec - (int)sec) * 1000000;
 
     FD_ZERO(&rfd);
     FD_SET(tty, &rfd);

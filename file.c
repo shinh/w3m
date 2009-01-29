@@ -837,12 +837,12 @@ readHeader(URLFile *uf, Buffer *newBuf, int thru, ParsedURL *pu)
 		int err;
 		if (show_cookie) {
 		    if (flag & COO_SECURE)
-		        disp_message_nsec("Received a secured cookie", FALSE, 1,
-				      TRUE, FALSE);
+		        disp_message_nsec("Received a secured cookie",
+					  FALSE, 0.1, TRUE, FALSE);
 		    else
 		        disp_message_nsec(Sprintf("Received cookie: %s=%s",
-					      name->ptr, value->ptr)->ptr,
-				      FALSE, 1, TRUE, FALSE);
+						  name->ptr, value->ptr)->ptr,
+					  FALSE, 0.1, TRUE, FALSE);
 		}
 		err =
 		    add_cookie(pu, name, value, expires, domain, path, flag,

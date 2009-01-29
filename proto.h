@@ -294,7 +294,7 @@ extern void record_err_message(char *s);
 extern Buffer *message_list_panel(void);
 extern void message(char *s, int return_x, int return_y);
 extern void disp_err_message(char *s, int redraw_current);
-extern void disp_message_nsec(char *s, int redraw_current, int sec, int purge,
+extern void disp_message_nsec(char *s, int redraw_current, float sec, int purge,
 			      int mouse);
 extern void disp_message(char *s, int redraw_current);
 #ifdef USE_MOUSE
@@ -493,7 +493,7 @@ extern void flush_tty(void);
 extern void toggle_stand(void);
 extern char getch(void);
 extern void bell(void);
-extern int sleep_till_anykey(int sec, int purge);
+extern int sleep_till_anykey(float sec, int purge);
 #ifdef USE_IMAGE
 extern void touch_cursor();
 #endif
