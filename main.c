@@ -4030,7 +4030,7 @@ goURL0(char *prompt, int relative)
 
 	current = baseURL(Currentbuf);
 	if (current) {
-	    char *c_url = parsedURL2Str(current)->ptr;
+	    char *c_url = parsedURL2Str(&Currentbuf->currentURL)->ptr;
 	    if (DefaultURLString == DEFAULT_URL_CURRENT) {
 		url = c_url;
 		if (DecodeURL)
