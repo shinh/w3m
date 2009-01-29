@@ -1500,6 +1500,13 @@ openURL(char *url, ParsedURL *pu, ParsedURL *current,
     else
 	u = url;
   retry:
+    /* ignore ime.nu and ime.st silently */
+    if (strlen(url) > 20 &&
+	(strncmp(url, "http://ime.nu/", 13) == 0 ||
+	 strncmp(url, "http://ime.st/", 13) == 0)) {
+	u = Strnew_m_charp("http://", url+14, NULL)->ptr;
+    }
+
     parseURL2(u, pu, current);
     if (pu->scheme == SCM_LOCAL && pu->file == NULL) {
 	if (pu->label != NULL) {
