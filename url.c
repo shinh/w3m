@@ -1261,7 +1261,7 @@ getURLScheme(char **url)
 
     while (*p && (IS_ALNUM(*p) || *p == '.' || *p == '+' || *p == '-'))
 	p++;
-    if (*p == ':') {		/* scheme found */
+    if (*p == ':' && !isdigit(p[1])) {		/* scheme found */
 	scheme = SCM_UNKNOWN;
 	for (i = 0; (q = schemetable[i].cmdname) != NULL; i++) {
 	    int len = strlen(q);
