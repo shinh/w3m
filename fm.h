@@ -1102,6 +1102,7 @@ global int default_use_cookie init(TRUE);
 global int use_cookie init(FALSE);
 global int show_cookie init(TRUE);
 global int accept_cookie init(FALSE);
+global int sync_cookie init(FALSE);
 #define ACCEPT_BAD_COOKIE_DISCARD	0
 #define ACCEPT_BAD_COOKIE_ACCEPT	1
 #define ACCEPT_BAD_COOKIE_ASK		2

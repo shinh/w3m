@@ -22,6 +22,18 @@ static int is_saved = 1;
 
 #define contain_no_dots(p, ep) (total_dot_number((p),(ep),1)==0)
 
+static void dump(Str msg) {
+    FILE *fp = fopen("/tmp/log", "a");
+    fputs(msg ? msg->ptr : "(null)", fp);
+    fputc('\n', fp);
+    fclose(fp);
+}
+#define dump(msg)
+
+static void load_cookies_fp(FILE *fp);
+static void load_cookies_sync(void);
+static void save_cookies_fp(FILE *fp, char *cookie_file);
+
 static int
 total_dot_number(char *p, char *ep, int max_count)
 {
@@ -211,6 +223,10 @@ find_cookie(ParsedURL *pu)
     int version = 0;
     char *fq_domainname, *domainname;
 
+    dump(Strnew_charp("GET"));
+
+    load_cookies_sync();
+
     fq_domainname = FQDN(pu->host);
     check_expired_cookies();
     for (p = First_cookie; p; p = p->next) {
@@ -257,10 +273,10 @@ char *special_domain[] = {
     ".com", ".edu", ".gov", ".mil", ".net", ".org", ".int", NULL
 };
 
-int
-add_cookie(ParsedURL *pu, Str name, Str value,
-	   time_t expires, Str domain, Str path,
-	   int flag, Str comment, int version, Str port, Str commentURL)
+static int
+add_cookie_impl(ParsedURL *pu, Str name, Str value,
+		time_t expires, Str domain, Str path,
+		int flag, Str comment, int version, Str port, Str commentURL)
 {
     struct cookie *p;
     char *domainname = (version == 0) ? FQDN(pu->host) : pu->host;
@@ -398,7 +414,51 @@ add_cookie(ParsedURL *pu, Str name, Str value,
     }
 
     check_expired_cookies();
+
     return 0;
+}
+
+int
+add_cookie(ParsedURL *pu, Str name, Str value,
+	   time_t expires, Str domain, Str path,
+	   int flag, Str comment, int version, Str port, Str commentURL)
+{
+    FILE *fp = NULL;
+    char *cookie_file = NULL;
+    int r;
+
+    dump(Strnew_charp("ADD"));
+    if (sync_cookie) {
+	cookie_file = rcFile(COOKIE_FILE);
+	if (!(fp = fopen(cookie_file, "r+"))) {
+	    if (!(fp = fopen(cookie_file, "w")))
+		return;
+	    fclose(fp);
+	    if (!(fp = fopen(cookie_file, "r+")))
+		return;
+	}
+	if (flock(fileno(fp), LOCK_EX) != 0) {
+	    perror("flock");
+	    w3m_exit(1);  /* why fail... */
+	}
+
+	First_cookie = NULL;
+	load_cookies_fp(fp);
+    }
+
+    r = add_cookie_impl(pu, name, value, expires, domain, path,
+			flag, comment, version, port, commentURL);
+
+    if (sync_cookie) {
+	if (ftruncate(fileno(fp), 0) != 0) {
+	    perror("ftruncate");
+	    w3m_exit(1);
+	}
+	fseek(fp, 0, SEEK_SET);
+	save_cookies_fp(fp, cookie_file);
+    }
+
+    return r;
 }
 
 struct cookie *
@@ -415,21 +475,10 @@ nth_cookie(int n)
 
 #define str2charp(str) ((str)? (str)->ptr : "")
 
-void
-save_cookies(void)
+static void
+save_cookies_fp(FILE *fp, char *cookie_file)
 {
     struct cookie *p;
-    char *cookie_file;
-    FILE *fp;
-
-    check_expired_cookies();
-
-    if (!First_cookie || is_saved || no_rc_dir)
-	return;
-
-    cookie_file = rcFile(COOKIE_FILE);
-    if (!(fp = fopen(cookie_file, "w")))
-	return;
 
     for (p = First_cookie; p; p = p->next) {
 	if (!(p->flag & COO_USE) || p->flag & COO_DISCARD)
@@ -446,6 +495,29 @@ save_cookies(void)
     chmod(cookie_file, S_IRUSR | S_IWUSR);
 }
 
+void
+save_cookies(void)
+{
+    char *cookie_file;
+    FILE *fp;
+
+    if (sync_cookie)
+	return;
+
+    dump(Strnew_charp("SAVE"));
+
+    check_expired_cookies();
+
+    if (!First_cookie || is_saved || no_rc_dir)
+	return;
+
+    cookie_file = rcFile(COOKIE_FILE);
+    if (!(fp = fopen(cookie_file, "w")))
+	return;
+
+    save_cookies_fp(fp, cookie_file);
+}
+
 static Str
 readcol(char **p)
 {
@@ -457,16 +529,12 @@ readcol(char **p)
     return tmp;
 }
 
-void
-load_cookies(void)
+static void
+load_cookies_fp(FILE *fp)
 {
     struct cookie *cookie, *p;
-    FILE *fp;
     Str line;
     char *str;
-
-    if (!(fp = fopen(rcFile(COOKIE_FILE), "r")))
-	return;
 
     if (First_cookie) {
 	for (p = First_cookie; p->next; p = p->next) ;
@@ -530,13 +598,41 @@ load_cookies(void)
 	    First_cookie = cookie;
 	p = cookie;
     }
+}
 
+void
+load_cookies(void)
+{
+    FILE *fp;
+
+    dump(Strnew_charp("LOAD"));
+
+    if (!(fp = fopen(rcFile(COOKIE_FILE), "r")))
+	return;
+    if (flock(fileno(fp), LOCK_SH) != 0) {
+	perror("flock");
+	w3m_exit(1);  /* why fail... */
+    }
+
+    load_cookies_fp(fp);
     fclose(fp);
+}
+
+static void
+load_cookies_sync(void)
+{
+    if (!sync_cookie)
+	return;
+    First_cookie = NULL;
+    load_cookies();
 }
 
 void
 initCookie(void)
 {
+    dump(Strnew_charp("INIT"));
+    if (sync_cookie)
+	return;
     load_cookies();
     check_expired_cookies();
 }
@@ -544,6 +640,10 @@ initCookie(void)
 Buffer *
 cookie_list_panel(void)
 {
+    dump("LIST PANEL");
+
+    load_cookies_sync();
+
     /* FIXME: gettextize? */
     Str src = Strnew_charp("<html><head><title>Cookies</title></head>"
 			   "<body><center><b>Cookies</b></center>"
@@ -661,6 +761,8 @@ set_cookie_flag(struct parsed_tagarg *arg)
 {
     int n, v;
     struct cookie *p;
+
+    dump(Strnew_charp("SET FLAG"));
 
     while (arg) {
 	if (arg->arg && *arg->arg && arg->value && *arg->value) {
