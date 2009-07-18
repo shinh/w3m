@@ -853,10 +853,11 @@ readHeader(URLFile *uf, Buffer *newBuf, int thru, ParsedURL *pu)
 			? "y" : NULL;
 		    if (fmInitialized && (err & COO_OVERRIDE_OK) &&
 			accept_bad_cookie == ACCEPT_BAD_COOKIE_ASK) {
-			Str msg = Sprintf("Accept bad cookie from %s for %s?",
+			Str msg = Sprintf("Accept bad cookie from %s for %s (err=%d)?",
 					  pu->host,
 					  ((domain && domain->ptr)
-					   ? domain->ptr : "<localdomain>"));
+					   ? domain->ptr : "<localdomain>"),
+					  err);
 			if (msg->length > COLS - 10)
 			    Strshrink(msg, msg->length - (COLS - 10));
 			Strcat_charp(msg, " (y/n)");
