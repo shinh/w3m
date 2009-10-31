@@ -7,6 +7,10 @@
 
 #define HIST_HASH_SIZE 127
 
+#define WHEN_SAVE_HIST_NEVER  0
+#define WHEN_SAVE_HIST_QUIT   1
+#define WHEN_SAVE_HIST_ALWAYS 2
+
 typedef ListItem HistItem;
 
 typedef GeneralList HistList;

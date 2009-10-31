@@ -55,6 +55,46 @@ loadHistory(Hist *hist)
 }
 
 void
+saveOneHistory(const char *ptr)
+{
+    FILE *f;
+    Str line;
+    long ri, wi;
+    static int prev_num_hist = 0;
+    int num_skip = prev_num_hist - URLHistSize;
+
+    if ((f = fopen(rcFile(HISTORY_FILE), "r+t")) == NULL)
+        return;
+
+    ri = wi = 0;
+    prev_num_hist = 1;
+    flock(fileno(f), LOCK_EX);
+    while (!feof(f)) {
+	line = Strfgets(f);
+	Strchop(line);
+	Strremovefirstspaces(line);
+	Strremovetrailingspaces(line);
+	if (line->length == 0)
+	    continue;
+	if (num_skip-- > 0)
+	    continue;
+	if (!Strcmp_charp(line, ptr))
+	    continue;
+	prev_num_hist++;
+
+	ri = ftell(f);
+	fseek(f, wi, SEEK_SET);
+	fprintf(f, "%s\n", (char *)line->ptr);
+	wi = ftell(f);
+	fseek(f, ri, SEEK_SET);
+    }
+    fseek(f, wi, SEEK_SET);
+    fprintf(f, "%s\n", ptr);
+    ftruncate(fileno(f), ftell(f));
+    fclose(f);
+}
+
+void
 saveHistory(Hist *hist, size_t size)
 {
     FILE *f;
@@ -150,6 +190,11 @@ pushHist(Hist *hist, char *ptr)
 HistItem *
 pushHashHist(Hist *hist, char *ptr)
 {
+#ifdef USE_HISTORY
+    if (UseHistory && SaveURLHist == WHEN_SAVE_HIST_ALWAYS)
+	saveOneHistory(ptr);
+#endif /* USE_HISTORY */
+
     HistItem *item;
 
     if (hist == NULL || hist->list == NULL)

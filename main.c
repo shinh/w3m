@@ -2419,7 +2419,7 @@ _quitfm(int confirm)
     save_cookies();
 #endif				/* USE_COOKIE */
 #ifdef USE_HISTORY
-    if (UseHistory && SaveURLHist)
+    if (UseHistory && SaveURLHist == WHEN_SAVE_HIST_QUIT)
 	saveHistory(URLHist, URLHistSize);
 #endif				/* USE_HISTORY */
     w3m_exit(0);
