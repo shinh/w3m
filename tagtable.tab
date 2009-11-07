@@ -174,3 +174,5 @@ pre_plain	HTML_PRE_PLAIN
 /pre_plain	HTML_N_PRE_PLAIN
 div_int		HTML_DIV_INT
 /div_int	HTML_N_DIV_INT
+button     HTML_BUTTON
+/button        HTML_N_BUTTON
