@@ -58,6 +58,8 @@ static Str cur_title;
 static Str cur_select;
 static Str select_str;
 static int select_is_multiple;
+
+static Str button_type;
 static int n_selectitem;
 static Str cur_option;
 static Str cur_option_value;
@@ -3705,6 +3707,51 @@ process_input(struct parsed_tag *tag)
 }
 
 Str
+process_button(struct parsed_tag *tag)
+{
+    int v;
+    char *q = "", *p = "submit", *r = "", *t;
+    Str tmp;
+    char *button_value, *button_name;
+    parsedtag_get_value(tag, ATTR_TYPE, &p);
+    parsedtag_get_value(tag, ATTR_VALUE, &q);
+    parsedtag_get_value(tag, ATTR_NAME, &r);
+    v = formtype(p);
+    if (v == FORM_UNKNOWN)
+	return NULL;
+    button_type = Strnew_charp(p);
+    button_value = html_quote(q);
+    button_name = html_quote(r);
+
+    if (cur_form_id < 0) {
+	char *s = "<form_int method=internal action=none>";
+	tmp = process_form(parse_tag(&s, TRUE));
+    }
+    if (tmp == NULL)
+	tmp = Strnew();
+
+    Strcat(tmp, Sprintf("<pre_int><input_alt hseq=\"%d\" fid=\"%d\" type=%s "
+			"name=\"%s\" value=\"%s\">",
+			cur_hseq++, cur_form_id,
+			button_type->ptr, button_name, button_value));
+
+    return tmp;
+}
+
+Str
+process_n_button(void)
+{
+    Str tmp = NULL;
+
+    if (button_type == NULL)
+	return NULL;
+
+    tmp = Strnew_charp("</input_alt></pre_int>");
+    button_type = NULL;
+    return tmp;
+}
+
+Str
 process_select(struct parsed_tag *tag)
 {
     Str tmp = NULL;
@@ -4918,6 +4965,9 @@ HTMLtagproc1(struct parsed_tag *tag, struct html_feed_environ *h_env)
 	return 1;
     case HTML_N_FORM:
 	CLOSE_A;
+	tmp = process_n_button();
+	if (tmp)
+	    HTMLlineproc1(tmp->ptr, h_env);
 	flushline(h_env, obuf, envs[h_env->envc].indent, 0, h_env->limit);
 	obuf->flag |= RB_IGNORE_P;
 	process_n_form();
@@ -4925,6 +4975,17 @@ HTMLtagproc1(struct parsed_tag *tag, struct html_feed_environ *h_env)
     case HTML_INPUT:
 	close_anchor(h_env, obuf);
 	tmp = process_input(tag);
+	if (tmp)
+	    HTMLlineproc1(tmp->ptr, h_env);
+	return 1;
+    case HTML_BUTTON:
+	close_anchor(h_env, obuf);
+	tmp = process_button(tag);
+	if (tmp)
+	    HTMLlineproc1(tmp->ptr, h_env);
+	return 1;
+    case HTML_N_BUTTON:
+	tmp = process_n_button();
 	if (tmp)
 	    HTMLlineproc1(tmp->ptr, h_env);
 	return 1;
@@ -6912,6 +6973,7 @@ loadHTMLstream(URLFile *f, Buffer *newBuf, FILE * src, int internal)
     forms_size = 0;
     forms = NULL;
     cur_hseq = 1;
+    button_type = NULL;
 #ifdef USE_IMAGE
     cur_iseq = 1;
     if (newBuf->image_flag)
