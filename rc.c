@@ -195,6 +195,7 @@ static int OptionEncode = FALSE;
 #define CMT_USECOOKIE   N_("Enable cookie processing")
 #define CMT_SHOWCOOKIE  N_("Print a message when receiving a cookie")
 #define CMT_ACCEPTCOOKIE N_("Accept cookies")
+#define CMT_SYNCCOOKIE   N_("Sync cookie")
 #define CMT_ACCEPTBADCOOKIE N_("Action to be taken on invalid cookie")
 #define CMT_COOKIE_REJECT_DOMAINS N_("Domains to reject cookies from")
 #define CMT_COOKIE_ACCEPT_DOMAINS N_("Domains to accept cookies from")
@@ -581,6 +582,8 @@ struct param_ptr params8[] = {
      CMT_SHOWCOOKIE, NULL},
     {"accept_cookie", P_INT, PI_ONOFF, (void *)&accept_cookie,
      CMT_ACCEPTCOOKIE, NULL},
+    {"sync_cookie", P_INT, PI_ONOFF, (void *)&sync_cookie,
+     CMT_SYNCCOOKIE, NULL},
     {"accept_bad_cookie", P_INT, PI_SEL_C, (void *)&accept_bad_cookie,
      CMT_ACCEPTBADCOOKIE, (void *)badcookiestr},
     {"cookie_reject_domains", P_STRING, PI_TEXT,
