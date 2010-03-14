@@ -1110,7 +1110,6 @@ global char *cookie_reject_domains init(NULL);
 global char *cookie_accept_domains init(NULL);
 global TextList *Cookie_reject_domains;
 global TextList *Cookie_accept_domains;
-global int use_cookie_server init(TRUE);
 #endif				/* USE_COOKIE */
 
 #ifdef USE_IMAGE

@@ -241,7 +241,6 @@ fusage(FILE * f, int err)
 #ifdef USE_COOKIE
     fprintf(f,
 	    "    -cookie          use cookie (-no-cookie: don't use cookie)\n");
-    fprintf(f, "    -no-cooksrv   don't use cookie server\n");
 #endif				/* USE_COOKIE */
     fprintf(f, "    -pauth user:pass proxy authentication\n");
     fprintf(f, "    -graph           use graphic character\n");
@@ -744,9 +743,6 @@ main(int argc, char **argv, char **envp)
 	    }
 	    else if (!strcmp("-reqlog",argv[i])) {
 		w3m_reqlog=rcFile("request.log");
-	    }
-	    else if (!strcmp("-no-cooksrv",argv[i])) {
-		use_cookie_server = 0;
 	    }
 	    else {
 		usage();
