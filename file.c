@@ -5074,6 +5074,13 @@ HTMLtagproc1(struct parsed_tag *tag, struct html_feed_environ *h_env)
 		}
 	    }
 	}
+#ifdef USE_M17N
+        p = NULL;
+	if (parsedtag_get_value(tag, ATTR_CHARSET, &p)) {
+            SKIP_BLANKS(p);
+            meta_charset = wc_guess_charset(p, 0);
+        }
+#endif
 	return 1;
     case HTML_BASE:
 #ifdef USE_IMAGE
