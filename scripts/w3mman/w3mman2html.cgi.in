@@ -32,7 +32,7 @@ Content-Type: text/html
 <h2>man -k <b>$k</b></h2>
 <ul>
 EOF
-    $keyword =~ s:([^-\w\200-\377.,])::g;
+    $keyword =~ s:([^-\w\200-\377.,\:])::g;
     open(F, "$MAN -k $keyword 2> /dev/null |");
     @line = ();
     while(<F>) {
@@ -40,7 +40,7 @@ EOF
       $_ = &html_quote($_);
       s/(\s+-.*)$//;
       $title = $1;
-      s@(\w[\w.\-]*(\s*\,\s*\w[\w.\-]*)*)\s*(\([\dn]\w*\))@&keyword_ref($1, $3)@ge;
+      s@(\w[\w.:\-]*(\s*\,\s*\w[\w.:\-]*)*)\s*(\([\dn]\w*\))@&keyword_ref($1, $3)@ge;
       print "<li>$_$title\n";
     }
     close(F);
@@ -90,8 +90,8 @@ if ($query{"local"}) {
     $man_section = "$man";
   }
 
-  $section =~ s:([^-\w\200-\377.,])::g;
-  $man =~ s:([^-\w\200-\377.,])::g;
+  $section =~ s:([^-\w\200-\377.,\:])::g;
+  $man =~ s:([^-\w\200-\377.,\:])::g;
   open(F, "$MAN $section $man 2> /dev/null |");
 }
 $ok = 0;
@@ -161,7 +161,7 @@ EOF
   s@(include(<\/?[bu]\>|\s)*\&lt;)([\w.\-/]+)@$1 . &include_ref($3)@ge;
   if ($prev && m@^\s*(\<[bu]\>)*(\w[\w.\-]*)(\</[bu]\>)*(\([\dm]\w*\))@) {
     $cmd .= "$2$4";
-    $prev =~ s@(\w[\w.\-]*-)((\</[bu]\>)*\s*)$@<a href="$CGI?$cmd">$1</a>$2@;
+    $prev =~ s@(\w[\w.:\-]*-)((\</[bu]\>)*\s*)$@<a href="$CGI?$cmd">$1</a>$2@;
     print $prev;
     $prev = '';
     s@^(\s*(\<[bu]\>)*)(\w[\w.\-]*)@@;
