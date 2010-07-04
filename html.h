@@ -206,6 +206,8 @@ typedef struct {
 #define HTML_N_IFRAME	114
 #define HTML_BUTTON     115
 #define HTML_N_BUTTON   116
+#define HTML_SPAN	117
+#define HTML_N_SPAN	118
 
    /* pseudo tag */
 #define HTML_SELECT_INT     120

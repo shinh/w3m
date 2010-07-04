@@ -5,6 +5,9 @@
 
 #define ATTR_CORE	ATTR_ID
 #define MAXA_CORE	1
+unsigned char ALST_CORE[] = {
+    ATTR_CORE
+};
 unsigned char ALST_A[] = {
     ATTR_NAME, ATTR_HREF, ATTR_REL, ATTR_CHARSET, ATTR_TARGET, ATTR_HSEQ,
     ATTR_REFERER,
@@ -133,8 +136,8 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"h", ALST_P, MAXA_P, 0},	/*   3 HTML_H          */
     {"/h", NULL, 0, TFLG_END},	/*   4 HTML_N_H        */
     {"p", ALST_P, MAXA_P, 0},	/*   5 HTML_P          */
-    {"br", NULL, 0, 0},		/*   6 HTML_BR         */
-    {"b", NULL, 0, 0},		/*   7 HTML_B          */
+    {"br", ALST_CORE, MAXA_CORE, 0},		/*   6 HTML_BR         */
+    {"b", ALST_CORE, MAXA_CORE, 0},	/*   7 HTML_B          */
     {"/b", NULL, 0, TFLG_END},	/*   8 HTML_N_B        */
     {"ul", ALST_UL, MAXA_UL, 0},	/*   9 HTML_UL         */
     {"/ul", NULL, 0, TFLG_END},	/*  10 HTML_N_UL       */
@@ -153,7 +156,7 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"blockquote", ALST_NOP, MAXA_NOP, 0},	/*  23 HTML_BLQ        */
     {"/blockquote", NULL, 0, TFLG_END},	/*  24 HTML_N_BLQ      */
     {"img", ALST_IMG, MAXA_IMG, 0},	/*  25 HTML_IMG        */
-    {"listing", NULL, 0, 0},	/*  26 HTML_LISTING    */
+    {"listing", ALST_CORE, MAXA_CORE, 0},	/*  26 HTML_LISTING    */
     {"/listing", NULL, 0, TFLG_END},	/*  27 HTML_N_LISTING  */
     {"xmp", NULL, 0, 0},	/*  28 HTML_XMP        */
     {"/xmp", NULL, 0, TFLG_END},	/*  29 HTML_N_XMP      */
@@ -165,9 +168,9 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"frame", ALST_FRAME, MAXA_FRAME, 0},	/*  35 HTML_FRAME      */
     {"frameset", ALST_FRAMESET, MAXA_FRAMESET, 0},	/*  36 HTML_FRAMESET   */
     {"/frameset", NULL, 0, TFLG_END},	/*  37 HTML_N_FRAMESET */
-    {"center", NULL, 0, 0},	/*  38 HTML_CENTER     */
+    {"center", ALST_CORE, MAXA_CORE, 0},	/*  38 HTML_CENTER     */
     {"/center", NULL, 0, TFLG_END},	/*  39 HTML_N_CENTER   */
-    {"font", NULL, 0, 0},	/*  40 HTML_FONT       */
+    {"font", ALST_CORE, MAXA_CORE, 0},	/*  40 HTML_FONT       */
     {"/font", NULL, 0, TFLG_END},	/*  41 HTML_N_FONT     */
     {"form", ALST_FORM, MAXA_FORM, 0},	/*  42 HTML_FORM       */
     {"/form", NULL, 0, TFLG_END},	/*  43 HTML_N_FORM     */
@@ -177,7 +180,7 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"select", ALST_SELECT, MAXA_SELECT, 0},	/*  47 HTML_SELECT     */
     {"/select", NULL, 0, TFLG_END},	/*  48 HTML_N_SELECT   */
     {"option", ALST_OPTION, MAXA_OPTION, 0},	/*  49 HTML_OPTION     */
-    {"nobr", NULL, 0, 0},	/*  50 HTML_NOBR       */
+    {"nobr", ALST_CORE, MAXA_CORE, 0},	/*  50 HTML_NOBR       */
     {"/nobr", NULL, 0, TFLG_END},	/*  51 HTML_N_NOBR     */
     {"div", ALST_P, MAXA_P, 0},	/*  52 HTML_DIV        */
     {"/div", NULL, 0, TFLG_END},	/*  53 HTML_N_DIV      */
@@ -188,16 +191,16 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"script", NULL, 0, 0},	/*  58 HTML_SCRIPT     */
     {"/script", NULL, 0, TFLG_END},	/*  59 HTML_N_SCRIPT   */
     {"base", ALST_BASE, MAXA_BASE, 0},	/*  60 HTML_BASE       */
-    {"del", NULL, 0, 0},	/*  61 HTML_DEL        */
+    {"del", ALST_CORE, MAXA_CORE, 0},	/*  61 HTML_DEL        */
     {"/del", NULL, 0, TFLG_END},	/*  62 HTML_N_DEL      */
-    {"ins", NULL, 0, 0},	/*  63 HTML_INS        */
+    {"ins", ALST_CORE, MAXA_CORE, 0},	/*  63 HTML_INS        */
     {"/ins", NULL, 0, TFLG_END},	/*  64 HTML_N_INS      */
-    {"u", NULL, 0, 0},		/*  65 HTML_U          */
+    {"u", ALST_CORE, MAXA_CORE, 0},		/*  65 HTML_U          */
     {"/u", NULL, 0, TFLG_END},	/*  66 HTML_N_U        */
     {"style", NULL, 0, 0},	/*  67 HTML_STYLE      */
     {"/style", NULL, 0, TFLG_END},	/*  68 HTML_N_STYLE    */
     {"wbr", NULL, 0, 0},	/*  69 HTML_WBR        */
-    {"em", NULL, 0, 0},		/*  70 HTML_EM         */
+    {"em", ALST_CORE, MAXA_CORE, 0},		/*  70 HTML_EM         */
     {"/em", NULL, 0, TFLG_END},	/*  71 HTML_N_EM       */
     {"body", ALST_BODY, MAXA_BODY, 0},	/*  72 HTML_BODY       */
     {"/body", NULL, 0, TFLG_END},	/*  73 HTML_N_BODY     */
@@ -228,25 +231,26 @@ TagInfo TagMAP[MAX_HTMLTAG] = {
     {"noframes", ALST_NOFRAMES, MAXA_NOFRAMES, 0},	/*  98 HTML_NOFRAMES   */
     {"/noframes", NULL, 0, TFLG_END},	/*  99 HTML_N_NOFRAMES */
 
-    {"sup", NULL, 0, 0},	/* 100 HTML_SUP       */
+    {"sup", ALST_CORE, MAXA_CORE, 0},	/* 100 HTML_SUP       */
     {"/sup", NULL, 0, 0},	/* 101 HTML_N_SUP       */
-    {"sub", NULL, 0, 0},	/* 102 HTML_SUB       */
+    /* FIXME: Should /sup and /sub have TFLG_END ? */
+    {"sub", ALST_CORE, MAXA_CORE, 0},	/* 102 HTML_SUB       */
     {"/sub", NULL, 0, 0},	/* 103 HTML_N_SUB       */
     {"link", ALST_LINK, MAXA_LINK, 0},	/*  104 HTML_LINK      */
-    {"s", NULL, 0, 0},		/*  105 HTML_S        */
+    {"s", ALST_CORE, MAXA_CORE, 0},		/*  105 HTML_S        */
     {"/s", NULL, 0, TFLG_END},	/*  106 HTML_N_S      */
-    {"q", NULL, 0, 0},		/*  107 HTML_Q */
+    {"q", ALST_CORE, MAXA_CORE, 0},		/*  107 HTML_Q */
     {"/q", NULL, 0, TFLG_END},	/*  108 HTML_N_Q */
-    {"i", NULL, 0, 0},		/*  109 HTML_I */
+    {"i", ALST_CORE, MAXA_CORE, 0},	/*  109 HTML_I */
     {"/i", NULL, 0, TFLG_END},	/*  110 HTML_N_I */
-    {"strong", NULL, 0, 0},		/* 111 HTML_STRONG */
+    {"strong", ALST_CORE, MAXA_CORE, 0},	/* 111 HTML_STRONG */
     {"/strong", NULL, 0, TFLG_END},	/* 112 HTML_N_STRONG */
     {"iframe", ALST_IFRAME, MAXA_IFRAME, 0},     /*  113 HTML_IFRAME */
     {"/iframe", NULL, 0, TFLG_END}, /* 114 HTML_N_IFRAME */
     {"button", ALST_BUTTON, MAXA_BUTTON, 0},	/* 115 HTML_BUTTON */
     {"/button", NULL, 0, TFLG_END},	/* 116 HTML_N_BUTTON */
-    {NULL, NULL, 0, 0},		/* 117 Undefined       */
-    {NULL, NULL, 0, 0},		/* 118 Undefined       */
+    {"span", ALST_CORE, MAXA_CORE, 0},	/* 117 HTML_SPAN       */
+    {"/span", NULL, 0, TFLG_END},	/* 118 HTML_N_SPAN     */
     {NULL, NULL, 0, 0},		/* 119 Undefined       */
 
     /* pseudo tag */
