@@ -1507,6 +1507,13 @@ openURL(char *url, ParsedURL *pu, ParsedURL *current,
 	u = Strnew_m_charp("http://", url+14, NULL)->ptr;
     }
 
+    /* remove #!/ */
+    if ((p = strstr(u, "#!/"))) {
+      size_t l = strlen(p+3);
+      memmove(p, p+3, l);
+      p[l] = '\0';
+    }
+
     parseURL2(u, pu, current);
     if (pu->scheme == SCM_LOCAL && pu->file == NULL) {
 	if (pu->label != NULL) {
