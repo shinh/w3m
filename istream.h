@@ -11,7 +11,10 @@
 #include "Str.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#define file_handle file_handle_fcntl
 #include <fcntl.h>
+#undef file_handle
 
 struct stream_buffer {
     unsigned char *buf;
