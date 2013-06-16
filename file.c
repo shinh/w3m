@@ -3736,7 +3736,7 @@ process_button(struct parsed_tag *tag)
 {
     int v;
     char *q = "", *p = "submit", *r = "", *t;
-    Str tmp;
+    Str tmp = NULL;
     char *button_value, *button_name;
     parsedtag_get_value(tag, ATTR_TYPE, &p);
     parsedtag_get_value(tag, ATTR_VALUE, &q);
