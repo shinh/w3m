@@ -833,7 +833,7 @@ main(int argc, char **argv, char **envp)
     mySignal(SIGPIPE, SigPipe);
 #endif
 
-    orig_GC_warn_proc = GC_set_warn_proc(wrap_GC_warn_proc);
+    GC_set_warn_proc(wrap_GC_warn_proc);
     err_msg = Strnew();
     if (load_argc == 0) {
 	/* no URL specified */
