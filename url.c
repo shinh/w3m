@@ -269,7 +269,7 @@ init_PRNG()
 	return;
     if ((file = RAND_file_name(buffer, sizeof(buffer)))) {
 #ifdef USE_EGD
-	if (RAND_egd(file) > 0)
+	if (RAND_bytes(file, strlen(file)) > 0)
 	    return;
 #endif
 	RAND_load_file(file, -1);
